@@ -42,16 +42,14 @@ namespace Project_FinchControl
 
         static void Main(string[] args)
         {
-            //
-            // Velis Code
-            //
-
+            (ConsoleColor backgroundColor, ConsoleColor foregroundColor) theme;
 
             DisplayWelcomeScreen();
 
-            (ConsoleColor backgroundColor, ConsoleColor foregroundColor) theme;
             theme = ReadTheme();
             SetTheme(theme.backgroundColor, theme.foregroundColor);
+
+            DisplayChangeTheme();
 
             DisplayMainMenu();
         }
@@ -67,16 +65,10 @@ namespace Project_FinchControl
             Console.WriteLine("Ready to write to the data file.");
             DisplayContinuePrompt();
 
-            //
-            // Velis Code - use ToString method, WriteAllText and AppendAllText
-            //
             File.WriteAllText(dataPath, backgroundColor.ToString());
             File.AppendAllText(dataPath, foregroundColor.ToString());
         }
 
-        //
-        // Velis Code
-        //
         static (ConsoleColor backgroundColor, ConsoleColor foregroundColor) ReadTheme()
         {
             string dataPath = @"Data\Theme.txt";
@@ -88,6 +80,8 @@ namespace Project_FinchControl
 
             Console.WriteLine("Ready to read colors from the data file.");
             Console.WriteLine();
+
+            DisplayContinuePrompt();
 
             theme = File.ReadAllLines(dataPath);
 
@@ -103,7 +97,7 @@ namespace Project_FinchControl
             return (backgroundColor, foregroundColor);
         }
 
-        void DisplayChangeTheme()
+        static void DisplayChangeTheme()
         {
             string userResponse;
             string background;
@@ -112,7 +106,7 @@ namespace Project_FinchControl
 
 
             DisplayScreenHeader("Set theme for the app.");
-            Console.WriteLine("The current theme is a black background with red writing. Would you like to change the theme?");
+            Console.WriteLine("The current theme is a red background with black writing. Would you like to change the theme?");
             userResponse = Console.ReadLine();
 
             for (int i = 0; i < 3; i++)
@@ -161,7 +155,8 @@ namespace Project_FinchControl
                                 DisplayContinuePrompt();
                                 DisplayChangeTheme();
                             }
-                            else if (background == "white")
+
+                        else if (background == "white")
                             {
                                 Console.Clear();
                                 Console.BackgroundColor = ConsoleColor.White;
@@ -180,9 +175,10 @@ namespace Project_FinchControl
                                     Console.WriteLine("This is not a valid option. Please choose red, blue or white.");
                                 }
                             }
+
                             else if (userResponse == "no")
                             {
-                                Console.WriteLine("The current text color is red. Would you like to change the text color?");
+                                Console.WriteLine("The current text color is black. Would you like to change the text color?");
                                 userResponse = Console.ReadLine();
 
                                 if (userResponse == "yes")
@@ -191,11 +187,11 @@ namespace Project_FinchControl
                                     Console.WriteLine("Please choose between black, blue or white.");
                                     foreground = Console.ReadLine();
 
-                                    if (foreground == "black")
+                                    if (foreground == "red")
                                     {
                                         Console.Clear();
                                         Console.ForegroundColor = ConsoleColor.Red;
-                                        Console.WriteLine("The text color has been changed to black. Is this the color you want?");
+                                        Console.WriteLine("The text color has been changed to red. Is this the color you want?");
                                         userResponse = Console.ReadLine();
                                         if (userResponse == "yes")
                                         { Console.WriteLine("This setting will be saved."); }
@@ -676,6 +672,7 @@ namespace Project_FinchControl
 
             Console.WriteLine("Ready to read commands from the data file.");
             Console.WriteLine();
+
 
             commandsString = File.ReadAllLines(dataPath);
 
