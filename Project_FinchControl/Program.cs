@@ -39,36 +39,47 @@ namespace Project_FinchControl
         }
 
         private static object finchRobot;
-
+        /// <summary>
+        /// main method
+        /// </summary>
         static void Main(string[] args)
         {
             (ConsoleColor backgroundColor, ConsoleColor foregroundColor) theme;
-
-            DisplayWelcomeScreen();
 
             theme = ReadTheme();
             SetTheme(theme.backgroundColor, theme.foregroundColor);
 
             DisplayChangeTheme();
+            
+            DisplayWelcomeScreen();
 
             DisplayMainMenu();
         }
+        #region theme
+        /// <summary>
+        /// apply changes made in the user programming 
+        /// </summary>
 
         static void SetTheme(ConsoleColor backgroundColor, ConsoleColor foregroundColor)
         {
             Console.ForegroundColor = foregroundColor;
             Console.BackgroundColor = backgroundColor;
         }
+        /// <summary>
+        /// write the theme to the theme.txt file
+        /// </summary>
         static void WriteTheme(ConsoleColor backgroundColor, ConsoleColor foregroundColor, string dataPath)
         {
-
             Console.WriteLine("Ready to write to the data file.");
+
             DisplayContinuePrompt();
 
             File.WriteAllText(dataPath, backgroundColor.ToString());
             File.AppendAllText(dataPath, foregroundColor.ToString());
         }
-
+        /// <summary>
+        /// read the theme from the theme.txt file
+        /// </summary>
         static (ConsoleColor backgroundColor, ConsoleColor foregroundColor) ReadTheme()
         {
             string dataPath = @"Data\Theme.txt";
@@ -84,11 +95,8 @@ namespace Project_FinchControl
             DisplayContinuePrompt();
 
             theme = File.ReadAllLines(dataPath);
-
             Enum.TryParse(theme[0], out backgroundColor);
-
             Enum.TryParse(theme[1], out foregroundColor);
-
             Console.WriteLine();
             Console.WriteLine("Colors read from data file.");
 
@@ -97,170 +105,112 @@ namespace Project_FinchControl
             return (backgroundColor, foregroundColor);
         }
 
+        /// <summary>
+        /// let the user change the theme
+        /// </summary>
         static void DisplayChangeTheme()
         {
             string userResponse;
             string background;
-            string foreground;
             string dataPath = @"Data\Theme/txt";
 
-
             DisplayScreenHeader("Set theme for the app.");
-            Console.WriteLine("The current theme is a red background with black writing. Would you like to change the theme?");
+            Console.WriteLine("Would you like to change the theme?");
             userResponse = Console.ReadLine();
 
-            for (int i = 0; i < 3; i++)
+            if (userResponse == "yes")
             {
-                if (userResponse == "yes")
+                Console.WriteLine("What color would you like as the background color?");
+                Console.WriteLine("Please choose between red, blue or white.");
+                background = Console.ReadLine();
+
+                if (background == "red")
                 {
-                    Console.WriteLine("Would you like to change the background color?");
+
+                    Console.BackgroundColor = ConsoleColor.Red;
+                    Console.Clear();
+                    Console.WriteLine("Background color has been changed to red. Is this the color you want?");
                     userResponse = Console.ReadLine();
-
                     if (userResponse == "yes")
+                    { Console.WriteLine("This setting will be saved."); }
+                    else if (userResponse == "no")
                     {
-                        Console.WriteLine("What color would you like as the background color?");
-                        Console.WriteLine("Please choose between red, blue or white.");
-                        background = Console.ReadLine();
-
-                        if (background == "red")
-                        {
-                            Console.Clear();
-                            Console.BackgroundColor = ConsoleColor.Red;
-                            Console.WriteLine("Background color has been changed to red. Is this the color you want?");
-                            userResponse = Console.ReadLine();
-                            if (userResponse == "yes")
-                            { Console.WriteLine("This setting will be saved."); }
-                            else if (userResponse == "no")
-                            {
-                                Console.WriteLine("No problem, we will just start over. Press any key to continue");
-                                Console.ReadKey();
-                                DisplayChangeTheme();
-                            }
-                            else
-                            {
-                                Console.WriteLine("Please indicate your choice with yes or no.");
-                            }
-                        }
-                        else if (background == "blue")
-                        {
-                            Console.Clear();
-                            Console.BackgroundColor = ConsoleColor.Blue;
-                            Console.WriteLine("Background color has been changed to blue. Is this the color you want?");
-                            userResponse = Console.ReadLine();
-                            if (userResponse == "yes")
-                            { Console.WriteLine("This setting will be saved."); }
-                            else if (userResponse == "no")
-                            {
-                                Console.WriteLine("No problem, we will just start over.");
-                                DisplayContinuePrompt();
-                                DisplayChangeTheme();
-                            }
-
-                        else if (background == "white")
-                            {
-                                Console.Clear();
-                                Console.BackgroundColor = ConsoleColor.White;
-                                Console.WriteLine("Background color has been changed to white. Is this the color you want?");
-                                userResponse = Console.ReadLine();
-                                if (userResponse == "yes")
-                                { Console.WriteLine("This setting will be saved."); }
-                                else if (userResponse == "no")
-                                {
-                                    Console.WriteLine("No problem, we will just start over.");
-                                    DisplayContinuePrompt();
-                                    DisplayChangeTheme();
-                                }
-                                else
-                                {
-                                    Console.WriteLine("This is not a valid option. Please choose red, blue or white.");
-                                }
-                            }
-
-                            else if (userResponse == "no")
-                            {
-                                Console.WriteLine("The current text color is black. Would you like to change the text color?");
-                                userResponse = Console.ReadLine();
-
-                                if (userResponse == "yes")
-                                {
-                                    Console.WriteLine("What color would you like as the text color?");
-                                    Console.WriteLine("Please choose between black, blue or white.");
-                                    foreground = Console.ReadLine();
-
-                                    if (foreground == "red")
-                                    {
-                                        Console.Clear();
-                                        Console.ForegroundColor = ConsoleColor.Red;
-                                        Console.WriteLine("The text color has been changed to red. Is this the color you want?");
-                                        userResponse = Console.ReadLine();
-                                        if (userResponse == "yes")
-                                        { Console.WriteLine("This setting will be saved."); }
-                                        else if (userResponse == "no")
-                                        {
-                                            Console.WriteLine("No problem, we will just start over.");
-                                            DisplayContinuePrompt();
-                                            DisplayChangeTheme();
-                                        }
-                                        else
-                                        {
-                                            Console.WriteLine("Please indicate your choice with yes or no.");
-                                        }
-                                    }
-                                    else if (foreground == "blue")
-                                    {
-                                        Console.Clear();
-                                        Console.BackgroundColor = ConsoleColor.Blue;
-                                        Console.WriteLine("The text color has been changed to blue. Is this the color you want?");
-                                        userResponse = Console.ReadLine();
-                                        if (userResponse == "yes")
-                                        { Console.WriteLine("This setting will be saved."); }
-                                        else if (userResponse == "no")
-                                        {
-                                            Console.WriteLine("No problem, we will just start over.");
-                                            DisplayContinuePrompt();
-                                            DisplayChangeTheme();
-                                        }
-                                        else if (foreground == "white")
-                                        {
-                                            Console.Clear();
-                                            Console.BackgroundColor = ConsoleColor.White;
-                                            Console.WriteLine("The text color has been changed to white. Is this the color you want?");
-                                            userResponse = Console.ReadLine();
-                                            if (userResponse == "yes")
-                                            { Console.WriteLine("This setting will be saved."); }
-                                            else if (userResponse == "no")
-                                            {
-                                                Console.WriteLine("No problem, we will just start over.");
-                                                DisplayContinuePrompt();
-                                                DisplayChangeTheme();
-                                            }
-                                        }
-
-                                        Console.Clear();
-                                        Console.WriteLine("The theme will now be updated.");
-                                        DisplayContinuePrompt();
-                                        ConsoleColor ForegroundColor = (ConsoleColor)Enum.Parse(typeof(ConsoleColor), foreground);
-                                        ConsoleColor BackgroundColor = (ConsoleColor)Enum.Parse(typeof(ConsoleColor), background);
-
-                                        SetTheme(ForegroundColor, BackgroundColor);
-                                        WriteTheme(ForegroundColor, BackgroundColor, dataPath);
-
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine();
-                                        Console.WriteLine("The colors will remain the same.");
-                                        DisplayContinuePrompt();
-                                        DisplayMainMenu();
-                                    }
-                                }
-                            }
-                        }
+                        Console.WriteLine("No problem, we will just start over. Press any key to continue");
+                        Console.ReadKey();
+                        DisplayChangeTheme();
+                    }
+                    else
+                    {
+                        Console.WriteLine("This is not a valid option. Please choose either yes or no.");
+                        DisplayContinuePrompt();
+                        DisplayChangeTheme();
                     }
                 }
-            }
-        }
+                else if (background == "blue")
+                {
 
+                    Console.BackgroundColor = ConsoleColor.Blue;
+                    Console.Clear();
+                    Console.WriteLine("Background color has been changed to blue. Is this the color you want?");
+                    userResponse = Console.ReadLine();
+                    if (userResponse == "yes")
+                    { Console.WriteLine("This setting will be saved."); }
+                    else if (userResponse == "no")
+                    {
+                        Console.WriteLine("No problem, we will just start over.");
+                        DisplayContinuePrompt();
+                        DisplayChangeTheme();
+                    }
+                    else
+                    {
+                        Console.WriteLine("This is not a valid option. Please choose either yes or no.");
+                        DisplayContinuePrompt();
+                        DisplayChangeTheme();
+                    }
+                }
+                else if (background == "white")
+                {
+
+                    Console.BackgroundColor = ConsoleColor.White;
+                    Console.Clear();
+                    Console.WriteLine("Background color has been changed to white. Is this the color you want?");
+                    userResponse = Console.ReadLine();
+                    if (userResponse == "yes")
+                    { Console.WriteLine("This setting will be saved."); }
+                    else if (userResponse == "no")
+                    {
+                        Console.WriteLine("No problem, we will just start over.");
+                        DisplayContinuePrompt();
+                        DisplayChangeTheme();
+                    }
+                    else
+                    {
+                        Console.WriteLine("This is not a valid option. Please choose either yes or no.");
+                        DisplayContinuePrompt();
+                        DisplayChangeTheme();
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Sorry, this is not a valid option. Please choose either red, blue or white.");
+                    DisplayContinuePrompt();
+                    DisplayChangeTheme();
+
+                }
+            }
+            else if (userResponse == "no")
+            {
+                Console.WriteLine("Let's get straight to the app!");
+                DisplayContinuePrompt();
+            }
+            else
+            {
+                Console.WriteLine("This is not a valid option. Please choose either yes or no.");
+                DisplayContinuePrompt();
+                DisplayChangeTheme();
+            }
+                    }
+        #endregion
         #region TALENT SHOW
         /// <summary>
         /// plays song can't help falling in love and lights up in different colors
@@ -309,7 +259,6 @@ namespace Project_FinchControl
             finchRobot.wait(1000);
             finchRobot.noteOff();
             finchRobot.setLED(0, 0, 0);
-
         }
         /// <summary>
         /// plays song father jack
@@ -419,7 +368,6 @@ namespace Project_FinchControl
                     Console.WriteLine($"Sorry, {color} is not available right now. Please choose a valid option.");
                 }
             }
-
         }
         /// <summary>
         /// lights up in different colors
@@ -450,8 +398,6 @@ namespace Project_FinchControl
             {
                 Console.WriteLine($"Sorry, {color} is not an option right now. Please choose a valid option");
             }
-
-
         }
         /// <summary>
         /// moves robot in different directions based on user input
@@ -459,7 +405,6 @@ namespace Project_FinchControl
 
         static void MoveRobot(Finch finchRobot)
         {
-
             string direction;
 
             Console.WriteLine("Which way would you like your robot to go?");
@@ -515,11 +460,9 @@ namespace Project_FinchControl
             bool quitApplication = false;
             string menuChoice;
 
-
             do
             {
                 DisplayScreenHeader("Main Menu");
-
                 //
                 // get the user's menu choice
                 //
@@ -579,7 +522,6 @@ namespace Project_FinchControl
             while (!quitApplication);
 
             finchRobot.disConnect();
-
         }
         /// <summary>
         /// user programming
@@ -599,11 +541,9 @@ namespace Project_FinchControl
             do
             {
                 DisplayScreenHeader("User Programming");
-
                 //
                 // get user menu choice
                 //
-
                 Console.WriteLine("a) Set Command Parameters");
                 Console.WriteLine("b) Add Commands");
                 Console.WriteLine("c) View Commands");
@@ -657,11 +597,11 @@ namespace Project_FinchControl
                         DisplayContinuePrompt();
                         break;
                 }
-
             } while (!quitApplication);
-
         }
-
+        /// <summary>
+        /// read the user's programming
+        /// </summary>
         static List<Command> DisplayReadUserProgrammingData()
         {
             string dataPath = @"Data\Data.txt";
@@ -691,6 +631,10 @@ namespace Project_FinchControl
 
             return commands;
         }
+        /// <summary>
+        /// write user programming to data.txt
+        /// </summary>
+        /// <param name="commands"></param>
         static void DisplayWriteUserProgrammingData(List<Command> commands)
         {
             string dataPath = @"Data\Data.txt";
@@ -711,9 +655,11 @@ namespace Project_FinchControl
             Console.WriteLine("Commands written to data file.");
 
             DisplayContinuePrompt();
-
-
         }
+        /// <summary>
+        /// execute user programming
+        /// </summary>
+
         static void DisplayExecuteFinchCommands(
             Finch finchRobot,
             List<Command> commands,
@@ -724,11 +670,9 @@ namespace Project_FinchControl
             int waitMilliSeconds = commandParameters.waitSeconds * 1000;
             int toneFrequency = commandParameters.toneFrequency;
 
-
             DisplayScreenHeader("Execute Finch Commands");
 
             // info and pause
-
             Console.ReadKey();
 
             foreach (Command command in commands)
@@ -826,11 +770,9 @@ namespace Project_FinchControl
                         DisplayMainMenu();
                         break;
 
-
                     default:
                         Console.WriteLine("Please enter a valid option.");
                         break;
-
                 }
             }
             DisplayContinuePrompt();
@@ -893,7 +835,6 @@ namespace Project_FinchControl
             Console.WriteLine("All commands have been added. Please review your programming under View Commands to approve.");
 
             DisplayContinuePrompt();
-
         }
 
         static (int motorSpeed, int ledBrightness, int waitSeconds, int toneFrequency) DisplayGetCommandParameters()
@@ -904,8 +845,6 @@ namespace Project_FinchControl
             commandParameters.ledBrightness = 0;
             commandParameters.waitSeconds = 0;
             commandParameters.toneFrequency = 0;
-
-            // todo validate command parameters
 
             Console.Write("Enter Motor Speed [1 - 255]:");
             commandParameters.motorSpeed = int.Parse(Console.ReadLine());
@@ -934,7 +873,6 @@ namespace Project_FinchControl
                 Console.WriteLine($"The value you have set is {commandParameters.waitSeconds}");
             }
 
-
             Console.WriteLine("Enter tone frequency [500-1000]");
             commandParameters.toneFrequency = int.Parse(Console.ReadLine());
             if (commandParameters.toneFrequency < 500 || commandParameters.toneFrequency > 1000)
@@ -944,9 +882,7 @@ namespace Project_FinchControl
                 Console.WriteLine($"The value you have set is {commandParameters.toneFrequency}");
             }
 
-
             return commandParameters;
-
         }
 
         /// <summary>
@@ -960,8 +896,6 @@ namespace Project_FinchControl
             double tempThreshold;
             bool thresholdExceeded;
             bool tempTresholeExceeded;
-
-
 
             DisplayScreenHeader("Alarm System");
 
@@ -1017,7 +951,6 @@ namespace Project_FinchControl
             DisplayContinuePrompt();
 
             finchRobot.setLED(0, 0, 0);
-
         }
         /// <summary>
         /// monitor the temperature levels
@@ -1057,7 +990,6 @@ namespace Project_FinchControl
 
                 }
             }
-
             return tempThresHoldExceeded;
         }
         /// <summary>
@@ -1081,7 +1013,6 @@ namespace Project_FinchControl
 
 
                 if (currentLightLevel < thresHold)
-
                 {
 
                     finchRobot.setLED(255, 0, 0);
@@ -1094,12 +1025,8 @@ namespace Project_FinchControl
                 {
                     finchRobot.wait(500);
                     seconds += 0.5;
-
                 }
-
-
             }
-
             return thresHoldExceeded;
         }
         /// <summary>
@@ -1169,7 +1096,6 @@ namespace Project_FinchControl
                     Console.WriteLine();
                     Console.WriteLine($"You have selected a threshold of {thresHold}");
                 }
-
             }
             DisplayContinuePrompt();
             return thresHold;
@@ -1244,7 +1170,6 @@ namespace Project_FinchControl
         /// </summary>
         static void DataRecorder(Finch finchRobot)
         {
-
             double dataPointFrequency;
             int numberOfDataPoints;
             string lightorTemp;
@@ -1262,10 +1187,8 @@ namespace Project_FinchControl
             dataPointFrequency = DisplayGetDataPointFrequency();
             numberOfDataPoints = DisplayGetDataRecorderNumber();
 
-
             double[] temperatures = new double[numberOfDataPoints];
             double[] lights = new double[numberOfDataPoints];
-
 
             DisplayGetDataReadings(numberOfDataPoints, dataPointFrequency, lights, temperatures, lightorTemp, finchRobot);
 
@@ -1296,16 +1219,10 @@ namespace Project_FinchControl
                     int miliSeconds = (int)(dataPointFrequency * 1000);
                     finchRobot.wait(miliSeconds);
 
-
                     Console.WriteLine($"Temperature in Celsius {index + 1}: {temperatures[index]}");
                     ConvertCelciusToFahrenheit(temperatures[index]);
 
-
                     Console.WriteLine("The data recording is complete");
-
-
-
-                    DisplayContinuePrompt();
                 }
             }
 
@@ -1326,7 +1243,7 @@ namespace Project_FinchControl
 
 
 
-                    DisplayContinuePrompt();
+                   
                 }
             }
 
@@ -1350,7 +1267,6 @@ namespace Project_FinchControl
             lightOrTemp = Console.ReadLine();
 
             return lightOrTemp;
-
         }
         /// <summary>
         /// converts the temperatures in celsius to fahrenheit
@@ -1379,9 +1295,7 @@ namespace Project_FinchControl
                 {
                     Console.WriteLine($"Temperature in Celsius {index + 1}: {temperatures[index]}");
 
-
                     ConvertCelciusToFahrenheit(temperatures[index]);
-
                 }
             }
             else if (lightorTemp == "light")
@@ -1391,7 +1305,6 @@ namespace Project_FinchControl
                 for (int index = 0; index < lights.Length; index++)
                 {
                     Console.WriteLine($"Lights {index + 1}: {lights[index]}");
-
                 }
             }
         }
@@ -1433,8 +1346,6 @@ namespace Project_FinchControl
             DisplayContinuePrompt();
 
             return dataPointFrequency;
-
-
         }
 
         /// <summary>
@@ -1467,9 +1378,7 @@ namespace Project_FinchControl
                 Console.WriteLine();
                 Console.WriteLine("Unable to disconnect to the Finch robot");
             }
-
             DisplayContinuePrompt();
-
         }
         /// <summary>
         /// display the talent show
@@ -1543,7 +1452,6 @@ namespace Project_FinchControl
         /// </summary>
         static bool DisplayConnectFinchRobot(Finch finchRobot)
         {
-
             DisplayScreenHeader("Connect Finch Robot");
 
             Console.WriteLine();
@@ -1572,12 +1480,10 @@ namespace Project_FinchControl
                 Console.WriteLine();
                 Console.WriteLine("Unable to connect to the Finch robot");
             }
-
             DisplayContinuePrompt();
 
             return finchRobotConnected;
         }
-
         /// <summary>
         /// display welcome screen
         /// </summary>
