@@ -918,7 +918,7 @@ namespace Project_FinchControl
                 if (thresholdExceeded)
                 {
                     Console.WriteLine();
-                    Console.WriteLine("Maximum Light Level Exceeded.");
+                    Console.WriteLine("Minimum Light Level Exceeded.");
                 }
                 else
                 {
@@ -1081,7 +1081,7 @@ namespace Project_FinchControl
             {
                 Console.Write($"Current Light Level: {finchRobot.getLeftLightSensor()}");
                 Console.WriteLine();
-                Console.Write("Enter Maximum Light Level [0-255]");
+                Console.Write("Enter Minimum Light Level [0-255]");
                 thresHold = double.Parse(Console.ReadLine());
 
                 if (thresHold > 255 || thresHold < 0)
